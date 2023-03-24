@@ -48,6 +48,7 @@ export async function getUserByIdUsingGET(
 export async function getLoginUserUsingGET(options?: { [key: string]: any }) {
   return request<API.BaseResponseLoginUserVO_>('/api/user/get/login', {
     method: 'GET',
+    //credentials:'include',
     ...(options || {}),
   });
 }

@@ -19,7 +19,8 @@ import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
-import {userLoginUsingPOST} from "@/services/api-backend/userController";
+import { userLoginUsingPOST} from "@/services/api-backend/userController";
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -36,15 +37,15 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  // const fetchUserInfo = async () => {
-  //   const userInfo = await initialState?.fetchUserInfo?.();
-  //   if (userInfo) {
-  //     await setInitialState((s) => ({
-  //       ...s,
-  //       currentUser: userInfo,
-  //     }));
-  //   }
-  // };
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+    if (userInfo) {
+      await setInitialState((s) => ({
+        ...s,
+        currentUser: userInfo,
+      }));
+    }
+  };
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
       // 登录
@@ -54,9 +55,15 @@ const Login: React.FC = () => {
       if (res.data) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
+        await fetchUserInfo();
+        //await setInitialState({
+          // loginUser: res.data
+          //currentUser: res.data
+        //});
+
         await setInitialState({
-          loginUser: res.data
-        });
+          currentUser: res.data,
+        })
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const { query } = history.location;
@@ -66,6 +73,9 @@ const Login: React.FC = () => {
         history.push(redirect || '/');
         return;
       }
+      // await setInitialState({
+      //   currentUser: res.data,
+      // })
       // 如果失败去设置用户错误信息
       // setUserLoginState(msg);
     } catch (error) {

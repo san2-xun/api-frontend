@@ -47,7 +47,7 @@ export default defineConfig({
   openAPI: [
     {
       requestLibPath: "import { request } from 'umi'",
-      schemaPath: 'http://localhost:8101/api//v2/api-docs',
+      schemaPath: 'http://localhost:8101/api/v2/api-docs',
       projectName: 'api-backend',
     },
   ],
